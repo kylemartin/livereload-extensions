@@ -9,11 +9,15 @@ VERSION_FILES = %w(
 )
 
 def coffee dst, src
+	puts "coffee dst = #{dst}"
+	puts "coffee src = #{src}"
     sh 'coffee', '-c', '-b', '-o', File.dirname(dst), src
 end
 
-def browserify dst, src
-    sh 'node_modules/.bin/browserify', src, '-o', dst
+def browserify dst, src	
+	puts "browserify dst = #{dst}"
+	puts "browserify src = #{src}"
+    sh 'browserify', src, '-o', dst
 end
 
 def concat dst, *srcs
@@ -48,9 +52,18 @@ def subst_version_refs_in_file file, ver
     File.open(file, 'w') { |f| f.write data }
 end
 
+task 'src/global.coffee' do |task|
+    coffee  "interim/global.js", task.name
+end
 
 file 'LiveReload.safariextension/global.js' => ['src/global.coffee'] do |task|
-    browserify task.name, task.prerequisites.first
+	puts "Start LiveReload.safariextension/global.js"
+    puts "task.name = #{task.name}"
+    puts "task.prerequisites.first = #{task.prerequisites.first}"
+    puts "task.prerequisites.last = #{task.prerequisites.last}"
+    puts "task.prerequisites.[0] = #{task.prerequisites[0]}"
+    puts "task.prerequisites.[1] = #{task.prerequisites[1]}"
+    browserify task.name, "interim/global.js"
 end
 
 file 'LiveReload.safariextension/global-safari.js' => ['src/global-safari.coffee'] do |task|
@@ -74,7 +87,7 @@ file 'LiveReload.safariextension/injected.js' => ['interim/injected.js', 'interi
 end
 
 file 'Chrome/LiveReload/global.js' => ['src/global.coffee'] do |task|
-    browserify task.name, task.prerequisites.first
+    browserify task.name, 'interim/global.js'
 end
 
 file 'Chrome/LiveReload/global-chrome.js' => ['src/global-chrome.coffee'] do |task|
@@ -94,7 +107,7 @@ file 'Chrome/LiveReload/injected.js' => ['interim/injected.js', 'interim/injecte
 end
 
 file 'Firefox/content/global.js' => ['src/global.coffee'] do |task|
-    browserify task.name, task.prerequisites.first
+    browserify task.name, 'interim/global.js'
 end
 file 'Firefox/content/injected.js' => ['src/injected.coffee'] do |task|
     coffee task.name, task.prerequisites.first
