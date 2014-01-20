@@ -9,6 +9,7 @@ VERSION_FILES = %w(
 )
 
 class Task 
+# From http://martinfowler.com/articles/rake.html
   def investigation
     result = "------------------------------\n"
     result << "Investigating #{name}\n" 
