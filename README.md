@@ -12,3 +12,4 @@ How to make the extensions (on Windows 8 64 bit):
 
 * Install node coffee script compiler ("C:\Program Files\nodejs\npm" install -g coffee-script)
 
+* Install zip.exe somewhere in your PATH e.g. C:\Windows (http://stahlforce.com/dev/index.php?tool=zipunzip)
