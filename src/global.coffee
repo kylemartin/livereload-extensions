@@ -1,6 +1,6 @@
 # LRClient = require 'livereload-client'
 
-ExtVersion = '2.0.9'
+ExtVersion = '0.0.2'
 
 Status =
   unavailable:
