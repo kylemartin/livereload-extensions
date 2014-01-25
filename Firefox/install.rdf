@@ -7,7 +7,7 @@
                    em:type="2"
                    em:name="RemoteLiveReload"
                    em:description="LiveReload refreshes a web page when files change."
-                   em:version="0.0.2"
+                   em:version="0.0.3"
                    em:creator="Ian Fraser"
                    em:homepageURL="https://github.com/bigwave/livereload-extensions"
                    em:iconURL="chrome://livereload/skin/icon_32.png">
