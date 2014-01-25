@@ -153,7 +153,7 @@ task :firefox => FIREFOX_SRC do |task|
     Dir.chdir 'Firefox' do
         sh 'zip', full_dest, *task.prerequisites.map { |f| f.sub(%r!^Firefox/!, '') }
     end
-    sh 'open', '-R', full_dest
+    #sh 'open', '-R', full_dest
 end
 
 desc "Pack Chrome extension"

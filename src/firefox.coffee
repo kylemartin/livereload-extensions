@@ -45,7 +45,10 @@ ToggleButton =
   initialize: ->
     @toggleButton = document.getElementById('livereload-button')
     @toggleButton.addEventListener 'command', (event) ->
-      LiveReloadGlobal.toggle(gBrowser.selectedTab)
+      currentUrl = window.content.document.location
+      #alert currentUrl.hostname
+      domain = currentUrl.hostname
+      LiveReloadGlobal.toggle(gBrowser.selectedTab, domain)
       ToggleButton.update()
 
   update: ->

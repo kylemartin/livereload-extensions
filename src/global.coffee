@@ -32,7 +32,12 @@ class TabState
     @active  = no
 
   enable: (host) ->
-    @host = @host || LiveReloadGlobal.host
+    console.log "enabling host " + host
+    console.log "and @host is " + @host
+    @host = @host || host || LiveReloadGlobal.host
+    console.log "and @host is " + @host
+    err = new Error();
+    console.log err.stack
     @send 'enable', { @useFallback, scriptURI: @bundledScriptURI(), host: @host, port: LiveReloadGlobal.port }
 
   disable: ->
