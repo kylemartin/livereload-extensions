@@ -8,11 +8,11 @@ VERSION_FILES = %w(
     Firefox/install.rdf
 )
 
-class Task 
+class Task
 # From http://martinfowler.com/articles/rake.html
   def investigation
     result = "------------------------------\n"
-    result << "Investigating #{name}\n" 
+    result << "Investigating #{name}\n"
     result << "class: #{self.class}\n"
     result <<  "task needed: #{needed?}\n"
     result <<  "timestamp: #{timestamp}\n"
@@ -32,13 +32,13 @@ end
 def coffee dst, src
 	puts "coffee dst = #{dst}"
 	puts "coffee src = #{src}"
-    sh 'coffee', '-c', '-b', '-o', File.dirname(dst), src
+    sh 'node_modules/.bin/coffee', '-c', '-b', '-o', File.dirname(dst), src
 end
 
-def browserify dst, src	
+def browserify dst, src
 	puts "browserify dst = #{dst}"
 	puts "browserify src = #{src}"
-    sh 'browserify', src, '-o', dst
+    sh 'node_modules/.bin/browserify', src, '-o', dst
 end
 
 def concat dst, *srcs
@@ -160,8 +160,9 @@ desc "Pack Chrome extension"
 task :chrome => :build do |task|
     full_ext = File.expand_path('Chrome/LiveReload')
     full_pem = File.expand_path('Chrome/LiveReload.pem')
-    sh '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
-        "--pack-extension=#{full_ext}", "--pack-extension-key=#{full_pem}"
+    sh 'node_modules/.bin/crx', "pack", "#{full_ext}",
+	#"--private-key=#{full_pem}",
+        "--file=Chrome/LiveReload.crx"
     mkdir_p "dist/#{version}"
     mv "Chrome/LiveReload.crx", "dist/#{version}/LiveReload.crx"
    #sh 'open', '-R', File.expand_path("dist/#{version}/LiveReload.crx")
