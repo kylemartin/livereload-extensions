@@ -1,7 +1,5 @@
 # LRClient = require 'livereload-client'
 
-ExtVersion = '0.0.3'
-
 Status =
   unavailable:
     buttonEnabled: no

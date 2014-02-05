@@ -4,17 +4,53 @@ module.exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
         options: {
+            pkg: grunt.file.readJSON('package.json'),
             firefox: {
-                build: 'Firefox/content'
+                build: 'build/Firefox/content',
+                id: 'remotelivereload@gmail.com',
+                minVersion: '4.0b6pre',
+                maxVersion: '30.0'
             },
             chrome: {
-                build: 'Chrome/LiveReload',
+                build: 'build/Chrome/LiveReload',
                 key: 'keys/chrome.pem'
             },
             safari: {
-                build: 'LiveReload.safariextension'
+                build: 'build/LiveReload.safariextension',
+                id: 'com.livereload.extensions.SafariLiveReload', // something
+                update: 'http://download.livereload.com/LiveReload-Safari-update.plist' // different here?
+            }
+        },
+
+        replace: {
+            options: {
+                force: true,
+                patterns: [
+                    { json: '<%= options %>' }
+                ]
+            },
+            common: {
+                src: 'template/VERSION',
+                dest: 'build/VERSION'
+            },
+            chrome: {
+                expand: true,
+                flatten: true,
+                src: 'template/Chrome/*',
+                dest: '<%= options.chrome.build %>'
+            },
+            firefox: {
+                expand: true,
+                cwd: 'template',
+                src: 'Firefox/**',
+                dest: 'build'
+            },
+            safari: {
+                expand: true,
+                flatten: true,
+                src: 'template/Safari/*',
+                dest: '<%= options.safari.build %>'
             }
         },
 
@@ -25,7 +61,8 @@ module.exports = function(grunt) {
             firefox: {
                 files: {
                     '<%= options.firefox.build %>/firefox.js': 'src/firefox.coffee',
-                    '<%= options.firefox.build %>/injected.js': 'src/injected.coffee'
+                    '<%= options.firefox.build %>/injected.js': ['build/VERSION',
+                                                                 'src/injected.coffee']
                 }
             },
             chrome: {
@@ -39,7 +76,8 @@ module.exports = function(grunt) {
                         dest: '<%= options.chrome.build %>',
                         ext: '.js'
                     }, {
-                        src: ['src/injected.coffee', 'src/injected-chrome.coffee'],
+                        src: ['build/VERSION', 'src/injected.coffee',
+                              'src/injected-chrome.coffee'],
                         dest: '<%= options.chrome.build %>/injected.js'
                     }
                 ]
@@ -47,7 +85,9 @@ module.exports = function(grunt) {
             safari: {
                 files: {
                     '<%= options.safari.build %>/global-safari.js': 'src/global-safari.coffee',
-                    '<%= options.safari.build %>/injected.js': ['src/injected.coffee', 'src/injected-safari.coffee']
+                    '<%= options.safari.build %>/injected.js': ['build/VERSION',
+                                                                'src/injected.coffee',
+                                                                'src/injected-safari.coffee']
                 }
             }
         },
@@ -73,11 +113,11 @@ module.exports = function(grunt) {
         compress: {
             firefox: {
                 options: {
-                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.xpi',
+                    archive: 'dist/<%= options.pkg.name %>-<%= options.pkg.version %>.xpi',
                     mode: 'zip'
                 },
                 expand: true,
-                cwd: 'Firefox/',
+                cwd: 'build/Firefox/',
                 src: '**',
                 dest: '.'
             }
@@ -86,7 +126,7 @@ module.exports = function(grunt) {
         crx: {
             chrome: {
                 src: '<%= options.chrome.build %>',
-                dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.crx',
+                dest: 'dist/<%= options.pkg.name %>-<%= options.pkg.version %>.crx',
                 privateKey: '<%= options.chrome.key %>'
             }
         },
@@ -99,10 +139,11 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('firefox', ['clean:build', 'coffee:common', 'coffee:firefox',
+    grunt.registerTask('firefox', ['clean:build', 'replace:common',
+                                   'replace:firefox', 'coffee:firefox',
                                    'browserify:firefox', 'compress:firefox']);
-    grunt.registerTask('chrome', ['clean:build', 'coffee:common', 'coffee:chrome',
-                                  'browserify:chrome', 'crx:chrome']);
-    grunt.registerTask('default', ['clean:build', 'coffee', 'browserify',
+    grunt.registerTask('chrome', ['clean:build', 'replace:common', 'replace:chrome',
+                                  'coffee:chrome', 'browserify:chrome', 'crx:chrome']);
+    grunt.registerTask('default', ['clean:build', 'replace', 'coffee', 'browserify',
                                    'compress', 'crx']);
 };

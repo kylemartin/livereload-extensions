@@ -1,6 +1,3 @@
-node_modules
-LiveReload.safariextension/*.js
-Chrome/LiveReload/*.js
-Firefox/content/*.js
+/node_modules
 /dist
 /build

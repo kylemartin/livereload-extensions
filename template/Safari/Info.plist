@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>Author</key>
-	<string>Andrey Tarantsov</string>
+	<string>@@pkg.author.name</string>
 	<key>Builder Version</key>
 	<string>8536.26.14</string>
 	<key>CFBundleDisplayName</key>
-	<string>LiveReload</string>
+	<string>@@pkg.name</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.livereload.extensions.SafariLiveReload</string>
+	<string>@@safari.id</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.3</string>
+	<string>@@pkg.version</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.3</string>
+	<string>@@pkg.version</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Global Page</key>
@@ -30,11 +30,11 @@
 				<key>Image</key>
 				<string>IconDisabled.png</string>
 				<key>Label</key>
-				<string>LiveReload</string>
+				<string>@@pkg.name</string>
 				<key>Palette Label</key>
-				<string>LiveReload</string>
+				<string>@@pkg.name</string>
 				<key>Tool Tip</key>
-				<string>Enable LiveReload on this tab</string>
+				<string>Enable @@pkg.name on this tab</string>
 			</dict>
 		</array>
 	</dict>
@@ -49,7 +49,7 @@
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Browser extension for LiveReload app</string>
+	<string>@@pkg.description</string>
 	<key>ExtensionInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>Permissions</key>
@@ -63,8 +63,8 @@
 		</dict>
 	</dict>
 	<key>Update Manifest URL</key>
-	<string>http://download.livereload.com/LiveReload-Safari-update.plist</string>
+	<string>@@safari.update</string>
 	<key>Website</key>
-	<string>http://livereload.com/</string>
+	<string>@@pkg.homepage</string>
 </dict>
 </plist>

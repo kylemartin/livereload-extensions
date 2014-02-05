@@ -22,8 +22,6 @@ CustomEvents =
     else
       throw new Error("Attempt to fire custom event #{eventName} on something which isn't a DOMElement")
 
-ExtVersion = '0.0.3'
-
 class LiveReloadInjected
 
   constructor: (@document, @window, @extName) ->
@@ -57,9 +55,9 @@ class LiveReloadInjected
     # our stuff isn't welcome in CKEditor's editing IFRAME :-)
     if @document.documentElement?.contentEditable is 'true'
       return
-      
+
     isSSL = @window.location.protocol is "https:"
-    
+
     if useFallback || isSSL
       url = "#{scriptURI}?ext=#{@extName}&extver=#{ExtVersion}&host=#{@host}&port=#{@port}"
       if @_verbose
