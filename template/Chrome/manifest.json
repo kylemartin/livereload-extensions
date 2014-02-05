@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "@@pkg.name",
-  "version": "@@pkg.version",
+  "name": "<%= pkg.name %>",
+  "version": "<%= pkg.version %>",
   "background": {
     "scripts": [
       "global.js",

@@ -4,8 +4,8 @@ module.exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         options: {
-            pkg: grunt.file.readJSON('package.json'),
             firefox: {
                 build: 'build/Firefox/content',
                 id: 'remotelivereload@gmail.com',
@@ -23,12 +23,12 @@ module.exports = function(grunt) {
             }
         },
 
-        replace: {
+        copy: {
             options: {
-                force: true,
-                patterns: [
-                    { json: '<%= options %>' }
-                ]
+                process: function(content, path) {
+                    return grunt.template.process(content);
+                },
+                noProcess: '**/*.png'
             },
             common: {
                 src: 'template/VERSION',
@@ -113,7 +113,7 @@ module.exports = function(grunt) {
         compress: {
             firefox: {
                 options: {
-                    archive: 'dist/<%= options.pkg.name %>-<%= options.pkg.version %>.xpi',
+                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.xpi',
                     mode: 'zip'
                 },
                 expand: true,
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
         crx: {
             chrome: {
                 src: '<%= options.chrome.build %>',
-                dest: 'dist/<%= options.pkg.name %>-<%= options.pkg.version %>.crx',
+                dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.crx',
                 privateKey: '<%= options.chrome.key %>'
             }
         },
@@ -139,11 +139,11 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('firefox', ['clean:build', 'replace:common',
-                                   'replace:firefox', 'coffee:firefox',
+    grunt.registerTask('firefox', ['clean:build', 'copy:common',
+                                   'copy:firefox', 'coffee:firefox',
                                    'browserify:firefox', 'compress:firefox']);
-    grunt.registerTask('chrome', ['clean:build', 'replace:common', 'replace:chrome',
+    grunt.registerTask('chrome', ['clean:build', 'copy:common', 'copy:chrome',
                                   'coffee:chrome', 'browserify:chrome', 'crx:chrome']);
-    grunt.registerTask('default', ['clean:build', 'replace', 'coffee', 'browserify',
+    grunt.registerTask('default', ['clean:build', 'copy', 'coffee', 'browserify',
                                    'compress', 'crx']);
 };

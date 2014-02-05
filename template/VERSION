@@ -1,1 +1,1 @@
-ExtVersion = '@@pkg.version'
+ExtVersion = '<%= pkg.version %>'
