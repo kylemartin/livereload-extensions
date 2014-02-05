@@ -1,15 +1,30 @@
-How to make the extensions (on Windows 8 64 bit):
+This is a fork of [original LiveReload](https://github.com/dvdotsenko/livereload_ie_extension) browser extension with fixed [tab's current host issue](https://github.com/livereload/livereload-extensions/pull/16) (so it works in any virtual machine) and slightly more straightforward building process.
 
-* Install Ruby http://rubyinstaller.org/downloads/
+I would be happy to **merge this into** mainstream (if it will display some activity) or pull it to someone who wants to support this project.
 
-* Install node.js (http://nodejs.org/download/)
+Tested to work in FF >= 10, Chrome >= 20, Opera >= 15.
 
-* Reboot
+## Building
 
-* gem install rake
+ * Install [node.js](http://nodejs.org/download/)
 
-* Install node package browserify: "C:\Program Files\nodejs\npm" install browserify
+ * Install [Grunt](http://gruntjs.com/getting-started#how-the-cli-works) Task Runner
 
-* Install node coffee script compiler ("C:\Program Files\nodejs\npm" install -g coffee-script)
+        npm install -g grunt-cli
 
-* Install zip.exe somewhere in your PATH e.g. C:\Windows (http://stahlforce.com/dev/index.php?tool=zipunzip)
+ * [Fetch](http://gruntjs.com/getting-started#working-with-an-existing-grunt-project) project dependencies
+
+        npm install
+
+ * Move your [Chrome private key](http://developer.chrome.com/extensions/packaging.html#creating) to `keys/chrome.pem` (you may want to [generate it from command line](https://github.com/jed/crx#crx-keygen-directory))
+
+ * Build ether Firefox (`grunt firefox`), ether Chome/Opera.Next (`grunt chrome`) or both (`grunt`) extensions.
+
+
+## Todo
+
+ * [Automate](http://developer.streak.com/2013/01/how-to-build-safari-extension-using.html) generation extension in Safari format ([XAR](http://mackyle.github.io/xar/howtosign.html#safariextz))
+ * Unify icons and share using `livereload.js`-script
+ * Test in old browser versions (*seems to not work in FF4.0 as promised in manifest*)
+ * Integrate Opera.Presto into build process
+ * Link to appropriate [IE addon](https://github.com/dvdotsenko/livereload_ie_extension)
