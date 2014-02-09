@@ -97,7 +97,7 @@ module.exports = function(grunt) {
                 transform: ['coffeeify']
             },
             firefox: {
-                src:  'src/global.coffee',
+                src: 'src/global.coffee',
                 dest: '<%= options.firefox.build %>/global.js'
             },
             chrome: {
@@ -120,6 +120,16 @@ module.exports = function(grunt) {
                 cwd: 'build/Firefox/',
                 src: '**',
                 dest: '.'
+            },
+            chrome: {
+                options: {
+                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.zip',
+                    mode: 'zip'
+                },
+                expand: true,
+                cwd: 'build/Chrome/',
+                src: '**',
+                dest: '.'
             }
         },
 
@@ -139,11 +149,19 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
+    grunt.registerTask('packageChrome', 'Either package as crx or zip', function() {
+        if (grunt.file.exists('<%= options.chrome.key %>')) {
+            grunt.task.run('crx:chrome');
+        } else {
+            grunt.task.run('compress:chrome');
+        }
+    });
+
     grunt.registerTask('firefox', ['clean:build', 'copy:common',
                                    'copy:firefox', 'coffee:firefox',
                                    'browserify:firefox', 'compress:firefox']);
     grunt.registerTask('chrome', ['clean:build', 'copy:common', 'copy:chrome',
-                                  'coffee:chrome', 'browserify:chrome', 'crx:chrome']);
-    grunt.registerTask('default', ['clean:build', 'copy', 'coffee', 'browserify',
-                                   'compress', 'crx']);
+                                  'coffee:chrome', 'browserify:chrome', 'packageChrome']);
+    grunt.registerTask('default', ['clean:build', 'copy', 'coffee', 'browserify', 
+                                   'compress', 'packageChrome']);
 };
