@@ -16,7 +16,9 @@ Tested to work in FF >= 10, Chrome >= 20, Opera >= 15.
 
         npm install
 
- * Move your [Chrome private key](http://developer.chrome.com/extensions/packaging.html#creating) to `keys/chrome.pem` (you may want to [generate it from command line](https://github.com/jed/crx#crx-keygen-directory))
+ * __Optional__ Move your [Chrome private key](http://developer.chrome.com/extensions/packaging.html#creating) to `keys/chrome.pem` (you may want to [generate it from command line](https://github.com/jed/crx#crx-keygen-directory))
+
+ * If you don't have a key in the keys folder, then the Chrome extension will be pacakaged as a zip file for [uploading to the chrome app store](http://developer.chrome.com/extensions/packaging.html)
 
  * Build ether Firefox (`grunt firefox`), ether Chome/Opera.Next (`grunt chrome`) or both (`grunt`) extensions.
 
