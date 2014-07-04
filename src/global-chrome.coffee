@@ -16,14 +16,15 @@ ToggleCommand =
     chrome.browserAction.setTitle { tabId, title: status.buttonToolTip }
     chrome.browserAction.setIcon { tabId, path: { '19' : status.buttonIcon, '38' : status.buttonIconHiRes } }
 
-getHost = (url) ->
-  matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
-  domain = matches && matches[1]
-  domain.split(':')[0]
+getParts = (url) ->
+  matches = url.match(/^(https?)\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
+  protocol = matches && matches[1]
+  domain = matches && matches[2]
+  [protocol, domain.split(':')[0]]
 
 chrome.browserAction.onClicked.addListener (tab) ->
-  host = getHost(tab.url)
-  LiveReloadGlobal.toggle(tab.id, host)
+  parts = getParts(tab.url)
+  LiveReloadGlobal.toggle(tab.id, parts[0], parts[1])
   ToggleCommand.update(tab.id)
 
 chrome.tabs.onSelectionChanged.addListener (tabId, selectInfo) ->
@@ -37,7 +38,7 @@ chrome.runtime.onMessage.addListener ([eventName, data], sender, sendResponse) -
   # console.log "#{eventName}(#{JSON.stringify(data)})"
   switch eventName
     when 'status'
-      host = getHost(sender.tab.url)
+      host = getParts(sender.tab.url)[1]
       LiveReloadGlobal.updateStatus(sender.tab.id, data, host)
       ToggleCommand.update(sender.tab.id)
     else

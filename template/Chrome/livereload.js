@@ -138,7 +138,7 @@ __connector.Connector = Connector = (function() {
     this.WebSocket = WebSocket;
     this.Timer = Timer;
     this.handlers = handlers;
-    this._uri = "ws://" + this.options.host + ":" + this.options.port + "/livereload";
+    this._uri = (this.options.proto === "https" ? "wss" : "ws") + "://" + this.options.host + ":" + this.options.port + "/livereload";
     this._nextDelay = this.options.mindelay;
     this._connectionDesired = false;
     this.protocol = 0;
@@ -316,6 +316,7 @@ Timer.start = function(timeout, func) {
 var Options;
 __options.Options = Options = (function() {
   function Options() {
+    this.proto = null;
     this.host = null;
     this.port = 35729;
     this.snipver = null;
@@ -342,16 +343,24 @@ Options.extract = function(document) {
   _ref = document.getElementsByTagName('script');
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     element = _ref[_i];
-    if ((src = element.src) && (m = src.match(/^[^:]+:\/\/(.*)\/z?livereload\.js(?:\?(.*))?$/))) {
+    if ((src = element.src) && (m = src.match(/^([^:]+):\/\/(.*)\/z?livereload\.js(?:\?(.*))?$/))) {
       options = new Options();
-      if (mm = m[1].match(/^([^\/:]+)(?::(\d+))?$/)) {
+      if (m[1]) {
+        var proto = m[1];
+        if (proto === "chrome-extension") {
+          // Assume same protocol as source document when loaded from extension
+          proto = document.location.protocol.slice(0,-1);
+        }
+        options.proto = proto;
+      }
+      if (mm = m[2].match(/^([^\/:]+)(?::(\d+))?$/)) {
         options.host = mm[1];
         if (mm[2]) {
           options.port = parseInt(mm[2], 10);
         }
       }
-      if (m[2]) {
-        _ref2 = m[2].split('&');
+      if (m[3]) {
+        _ref2 = m[3].split('&');
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
           pair = _ref2[_j];
           if ((keyAndValue = pair.split('=')).length > 1) {

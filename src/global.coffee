@@ -117,7 +117,7 @@ LiveReloadGlobal =
     else
       null
 
-  toggle: (tab, host) ->
+  toggle: (tab, proto, host) ->
     if @isAvailable(tab)
       state = @findState(tab, yes, host)
       if state.enabled
@@ -137,7 +137,7 @@ LiveReloadGlobal =
             else
               state.useFallback = @useFallback
               state.enable(host)
-          host)
+          proto, host)
 
   tabStatus: (tab) ->
     unless @isAvailable(tab)
@@ -151,7 +151,7 @@ LiveReloadGlobal =
     return yes for tabState in @_tabs when tabState.enabled
     no
 
-  beforeEnablingFirst: (callback, host = no) ->
+  beforeEnablingFirst: (callback, proto = no, host = no) ->
     @useFallback = no
     host = host || @host
 
@@ -161,10 +161,10 @@ LiveReloadGlobal =
     failOnTimeout = ->
       console.log "Haven't received a handshake reply in time, disconnecting."
       ws.close()
-    timeout = setTimeout(failOnTimeout, 1000)
-
-    console.log "Connecting to ws://#{host}:#{@port}/livereload..."
-    ws = new TheWebSocket("ws://#{host}:#{@port}/livereload")
+    timeout = setTimeout(failOnTimeout, 5000)
+    wsProto = if (proto == "https") then "wss" else "ws";
+    console.log "Connecting to #{wsProto}://#{host}:#{@port}/livereload..."
+    ws = new TheWebSocket("#{wsProto}://#{host}:#{@port}/livereload")
     ws.onerror = =>
       console.log "Web socket error."
       callback('cannot-connect') unless callbackCalled
@@ -196,7 +196,7 @@ LiveReloadGlobal =
         xhr.onerror = (event) =>
           callback('cannot-download') unless callbackCalled
           callbackCalled = yes
-        xhr.open("GET", "http://#{host}:#{@port}/livereload.js", true)
+        xhr.open("GET", "#{proto}://#{host}:#{@port}/livereload.js", true)
         xhr.send(null)
 
 
